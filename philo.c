@@ -27,6 +27,11 @@ int	ft_isdigit(char	const *c)
 	return (1);
 }
 
+void	mutext_init()
+{
+	//
+}
+
 int	ft_atoi(const char *str)
 {
 	unsigned long long	result;
@@ -85,12 +90,14 @@ void	init_philos(t_philo *philo, t_data *data, int ac)
 	int	i;
 
 	i = 0;
+	philo = malloc(sizeof(*philo));
 	while (i < ac)
 	{
 		philo->id = i;
-		philo->thread = pthread_create(&philo->thread, NULL, &routine, NULL);
+		pthread_create(&philo->thread, NULL, (void *)*routine, NULL);
 		i++;
 	}
+	free(philo);
 }
 
 void	init_data(t_philo	*philo, char **av, int const ac)
@@ -107,7 +114,8 @@ void	init_data(t_philo	*philo, char **av, int const ac)
 		printf("%s\n", ERR_IN_2);
 		return ;
 	}
-	data->philos_number = output[0];
+	data = malloc(sizeof *data);
+	data->philo_count = output[0];
 	data->time_to_die = output[1];
 	data->time_to_eat = output[2];
 	data->time_to_sleep = output[3];

@@ -38,7 +38,7 @@
 
 typedef	struct s_data
 {
-	int	philos_number;
+	int	philo_count;
 	int	time_to_eat;
 	int	time_to_die;
 	int	time_to_sleep;
@@ -54,6 +54,8 @@ typedef struct s_philo
 	int			    is_sleeping;
 	pthread_mutex_t	*lfork;
 	pthread_mutex_t	*rfork;
+	pthread_mutex_t	lock;
+	t_data			*data;
 }	t_philo;
 
 #endif
