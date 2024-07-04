@@ -14,8 +14,11 @@
 
 int	ft_isdigit(char	const *c)
 {
-	int	i = 0;
-	while (c[i]) {
+	int	i;
+
+	i = 0;
+	while (c[i])
+	{
 		if (c[i] >= '0' && c[i] <= '9')
 			i++;
 		else
@@ -50,16 +53,19 @@ int	ft_atoi(const char *str)
 	return ((int)(result * sign));
 }
 
-int	*check_params(char **av, int const ac) {
+int	*check_params(char **av, int const ac)
+{
 	int	i;
 	int	*result;
 
 	i = 0;
 	result = malloc(sizeof(int) * ac - 1);
-	while (i < ac - 1) {
+	while (i < ac - 1)
+	{
 		if (ft_isdigit(av[i + 1]))
 			result[i] = atoi(av[i + 1]);
-		else {
+		else
+		{
 			free(result);
 			return (0);
 		}
@@ -68,20 +74,50 @@ int	*check_params(char **av, int const ac) {
 	return (result);
 }
 
-void	init_philos(t_philo	*philo, char **av, int const ac)
+void	*routine(void)
+{
+	printf("Hello\n");
+	return (0);
+}
+
+void	init_philos(t_philo *philo, t_data *data, int ac)
+{
+	int	i;
+
+	i = 0;
+	while (i < ac)
+	{
+		philo->id = i;
+		philo->thread = pthread_create(&philo->thread, NULL, &routine, NULL);
+		i++;
+	}
+}
+
+void	init_data(t_philo	*philo, char **av, int const ac)
 {
 	t_data	*data;
 	int		*output;
+	int		i;
 
+	i = 0;
 	output = check_params(av, ac);
-	if (!output[0]) {
+	if (!output[0])
+	{
 		free(output);
 		printf("%s\n", ERR_IN_2);
 		return ;
 	}
+	data->philos_number = output[0];
+	data->time_to_die = output[1];
+	data->time_to_eat = output[2];
+	data->time_to_sleep = output[3];
+	if (ac - 1 == 5)
+		data->eating_rounds = output[4];
+	free(output);
+	init_philos(philo, data, ac - 1);
 }
 
-size_t	get_time()
+size_t	get_time(void)
 {
 	size_t			curr_time;
 	struct timeval	tv;
@@ -91,22 +127,18 @@ size_t	get_time()
 	return (curr_time / 10);
 }
 
-void	*routine()
+int	main(int ac, char **av)
 {
-	printf("Hello\n");
-	return (0);
-}
-
-int	main(int ac, char **av) {
 	t_philo	*philos;
 
 	philos = NULL;
-	if (ac != 5 && ac != 6) {
+	if (ac != 5 && ac != 6)
+	{
 		printf("%s\n", ERR_IN_3);
 		return (0);
 	}
 	else
-		init_philos(philos, av, ac);
+		init_data(philos, av, ac);
 	printf("ALL GOOD: %ld\n", get_time());
 	return (1);
 }

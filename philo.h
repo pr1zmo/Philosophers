@@ -42,6 +42,7 @@ typedef	struct s_data
 	int	time_to_eat;
 	int	time_to_die;
 	int	time_to_sleep;
+	int	eating_rounds;
 }	t_data;
 
 typedef struct s_philo
