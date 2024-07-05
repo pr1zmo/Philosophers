@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/08 17:36:06 by prizmo            #+#    #+#             */
-/*   Updated: 2024/07/01 13:02:56 by prizmo           ###   ########.fr       */
+/*   Created: 2024/07/04 14:37:34 by zelbassa          #+#    #+#             */
+/*   Updated: 2024/07/05 12:20:39 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,15 @@ int	*check_params(char **av, int const ac)
 	return (result);
 }
 
-void	*routine(void)
+void	*routine(void *data)
 {
+	t_philo	*philo_data;
+
+	philo_data = (t_philo *)data;
+	pthread_mutex_init(&philo_data->lock, NULL);
 	printf("Hello\n");
+	pthread_join(philo_data->thread, NULL);
+	pthread_mutex_destroy(&philo_data->lock);
 	return (0);
 }
 
@@ -94,9 +100,10 @@ void	init_philos(t_philo *philo, t_data *data, int ac)
 	while (i < ac)
 	{
 		philo->id = i;
-		pthread_create(&philo->thread, NULL, (void *)*routine, NULL);
+		pthread_create(&philo->thread, NULL, (void *)*routine, (void*)&philo);
 		i++;
 	}
+	free(data);
 	free(philo);
 }
 
@@ -137,16 +144,11 @@ size_t	get_time(void)
 
 int	main(int ac, char **av)
 {
-	t_philo	*philos;
+	t_philo	philos[200];
 
-	philos = NULL;
 	if (ac != 5 && ac != 6)
-	{
-		printf("%s\n", ERR_IN_3);
-		return (0);
-	}
+		return (printf("%s\n", ERR_IN_3), 1);
 	else
 		init_data(philos, av, ac);
-	printf("ALL GOOD: %ld\n", get_time());
-	return (1);
+	return (0);
 }
