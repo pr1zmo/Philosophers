@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:37:34 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/07/05 12:20:39 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/07/06 14:53:59 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,6 @@ int	ft_isdigit(char	const *c)
 			return (0);
 	}
 	return (1);
-}
-
-void	mutext_init()
-{
-	//
 }
 
 int	ft_atoi(const char *str)
@@ -58,25 +53,19 @@ int	ft_atoi(const char *str)
 	return ((int)(result * sign));
 }
 
-int	*check_params(char **av, int const ac)
+int	check_params(char **av, int const ac)
 {
 	int	i;
-	int	*result;
 
 	i = 0;
-	result = malloc(sizeof(int) * ac - 1);
 	while (i < ac - 1)
 	{
 		if (ft_isdigit(av[i + 1]))
-			result[i] = atoi(av[i + 1]);
+			i++;
 		else
-		{
-			free(result);
 			return (0);
-		}
-		i++;
 	}
-	return (result);
+	return (1);
 }
 
 void	*routine(void *data)
@@ -84,71 +73,47 @@ void	*routine(void *data)
 	t_philo	*philo_data;
 
 	philo_data = (t_philo *)data;
-	pthread_mutex_init(&philo_data->lock, NULL);
-	printf("Hello\n");
 	pthread_join(philo_data->thread, NULL);
-	pthread_mutex_destroy(&philo_data->lock);
+	printf("Hello\n");
+	free(philo_data);
 	return (0);
 }
 
-void	init_philos(t_philo *philo, t_data *data, int ac)
+void	init_data(char **av, int ac, t_data *data)
 {
 	int	i;
 
 	i = 0;
-	philo = malloc(sizeof(*philo));
-	while (i < ac)
-	{
-		philo->id = i;
-		pthread_create(&philo->thread, NULL, (void *)*routine, (void*)&philo);
-		i++;
-	}
-	free(data);
-	free(philo);
+	data->philo_count = ft_atoi(av[1]);
+	data->time_to_die = ft_atoi(av[2]);
+	data->time_to_sleep = ft_atoi(av[3]);
+	data->time_to_think = ft_atoi(av[4]);
+	if (ac == 6)
+		data->eating_rounds = ft_atoi(av[5]);
 }
 
-void	init_data(t_philo	*philo, char **av, int const ac)
+void	init_forks(pthread_mutex_t *forks, char **av)
 {
-	t_data	*data;
-	int		*output;
-	int		i;
-
-	i = 0;
-	output = check_params(av, ac);
-	if (!output[0])
-	{
-		free(output);
-		printf("%s\n", ERR_IN_2);
-		return ;
-	}
-	data = malloc(sizeof *data);
-	data->philo_count = output[0];
-	data->time_to_die = output[1];
-	data->time_to_eat = output[2];
-	data->time_to_sleep = output[3];
-	if (ac - 1 == 5)
-		data->eating_rounds = output[4];
-	free(output);
-	init_philos(philo, data, ac - 1);
+	//
 }
 
-size_t	get_time(void)
+void	init_philos(pthread_mutex_t *forks, t_philo *philo)
 {
-	size_t			curr_time;
-	struct timeval	tv;
-
-	gettimeofday(&tv, NULL);
-	curr_time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
-	return (curr_time / 10);
+	//
 }
 
 int	main(int ac, char **av)
 {
-	t_philo	philos[200];
+	t_data			data;
+	t_philo			philos[200];
+	pthread_mutex_t	forks[200];
 
 	if (ac != 5 && ac != 6)
 		return (printf("%s\n", ERR_IN_3), 1);
-	else
-		init_data(philos, av, ac);
+	if (!check_params(av, ac))
+		return (printf("%s\n", ERR_IN_2), 1);
+	init_data(av, ac, &data);
+	init_forks(forks, av);
+	init_philos(forks, philos);
 	return (0);
 }

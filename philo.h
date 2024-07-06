@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 12:34:31 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/07/05 11:50:24 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/07/06 14:53:43 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,26 +36,26 @@
 # define EATING "is eating"
 # define DIED "died"
 
-typedef	struct s_data
-{
-	int	philo_count;
-	int	time_to_eat;
-	int	time_to_die;
-	int	time_to_sleep;
-	int	eating_rounds;
-}	t_data;
-
 typedef struct s_philo
 {
-	pthread_t	    thread;
-	int			    id;
-	int			    is_eating;
-	int			    is_thinking;
-	int			    is_sleeping;
+	pthread_t		thread;
+	int				id;
+	size_t			is_eating;
+	size_t			last_meal;
 	pthread_mutex_t	*lfork;
 	pthread_mutex_t	*rfork;
 	pthread_mutex_t	lock;
-	t_data			*data;
 }	t_philo;
+
+typedef	struct s_data
+{
+	size_t			philo_count;
+	size_t			time_to_eat;
+	size_t			time_to_die;
+	size_t			time_to_think;
+	size_t			time_to_sleep;
+	size_t			eating_rounds;
+	t_philo			*philos;
+}	t_data;
 
 #endif
