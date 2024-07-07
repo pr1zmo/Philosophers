@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 12:34:31 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/07/06 14:53:43 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/07/07 12:59:23 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ typedef struct s_philo
 	size_t			last_meal;
 	pthread_mutex_t	*lfork;
 	pthread_mutex_t	*rfork;
-	pthread_mutex_t	lock;
+	pthread_mutex_t	*death_lock;
+	pthread_mutex_t	*stdout_lock;
 }	t_philo;
 
 typedef	struct s_data
@@ -52,9 +53,10 @@ typedef	struct s_data
 	size_t			philo_count;
 	size_t			time_to_eat;
 	size_t			time_to_die;
-	size_t			time_to_think;
 	size_t			time_to_sleep;
 	size_t			eating_rounds;
+	pthread_mutex_t	stdout_lock;
+	pthread_mutex_t	death_lock;
 	t_philo			*philos;
 }	t_data;
 
