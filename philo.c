@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:37:34 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/07/07 19:18:47 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/07/08 10:51:44 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,45 @@ int	check_params(char **av, int const ac)
 	return (1);
 }
 
+void	write_message(t_philo *philo, char *str)
+{
+	pthread_mutex_lock(philo->stdout_lock);
+	printf("philo id: %d\n", philo->id);
+	printf("%s\n", str);
+	pthread_mutex_unlock(philo->stdout_lock);
+}
+
+int	dead_loop(t_philo *philo)
+{
+	pthread_mutex_lock(philo->death_lock);
+	if (philo->is_dead == 1)
+		return (pthread_mutex_unlock(philo->death_lock), 1);
+	pthread_mutex_unlock(philo->death_lock);
+	return (0);
+}
+
+void	thinking(t_philo *philo)
+{
+	//
+}
+
+void	sleeping(t_philo *philo)
+{
+	//
+}
+
+void	eating(t_philo *philo)
+{
+	if (!dead_loop(philo))
+		write_message(philo, EATING);
+}
+
 void	*routine(void *param)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)param;
-	printf("Hello\n");
-	pthread_join(philo[0].thread, NULL);
-	return (0);
+	eating(philo);
 }
 
 size_t	get_current_time(void)
@@ -130,6 +161,7 @@ void	init_philos(pthread_mutex_t *forks, t_data *data, t_philo *philos)
 		philos[i].is_eating = 0;
 		philos[i].last_meal = get_current_time();
 		philos[i].lfork = &forks[i];
+		philos[i].is_dead = 0;
 		philos[i].death_lock = &data->death_lock;
 		philos[i].stdout_lock = &data->stdout_lock;
 		if (i == 0)
@@ -140,7 +172,7 @@ void	init_philos(pthread_mutex_t *forks, t_data *data, t_philo *philos)
 	}
 }
 
-void	start_simulation(t_data *data, pthread_mutex_t *forks)
+void	start_simulation(t_data *data, pthread_mutex_t *forks, t_philo *philos)
 {
 	int	i;
 
@@ -148,8 +180,13 @@ void	start_simulation(t_data *data, pthread_mutex_t *forks)
 	printf("%d\n", data->philo_count);
 	while (i < data->philo_count)
 	{
-		pthread_create(&data->philos[i].thread, NULL, &routine, &data->philos[i]);
-		printf("philo id: %d\n", data->philos[i].id);
+		pthread_create(&philos[i].thread, NULL, &routine, &philos[i]);
+		i++;
+	}
+	i = 0;
+	while (i < data->philo_count)
+	{
+		pthread_join(philos[i].thread, NULL);
 		i++;
 	}
 }
@@ -172,7 +209,7 @@ int	main(int ac, char **av)
 	init_data(av, ac, &data, *philos);
 	init_forks(forks, av);
 	init_philos(forks, &data, philos);
-	start_simulation(&data, forks);
+	start_simulation(&data, forks, philos);
 	destroy_all(philos, &data, forks);
 	return (0);
 }

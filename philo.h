@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 12:34:31 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/07/07 12:59:23 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/07/08 10:51:48 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct s_philo
 {
 	pthread_t		thread;
 	int				id;
+	int				is_dead;
 	size_t			is_eating;
 	size_t			last_meal;
 	pthread_mutex_t	*lfork;
