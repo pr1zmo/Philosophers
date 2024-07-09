@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 12:34:31 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/07/08 10:51:48 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/07/09 13:51:49 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_philo
 	int				is_dead;
 	size_t			is_eating;
 	size_t			last_meal;
+	int				eating_rounds;
 	pthread_mutex_t	*lfork;
 	pthread_mutex_t	*rfork;
 	pthread_mutex_t	*death_lock;
@@ -60,5 +61,7 @@ typedef	struct s_data
 	pthread_mutex_t	death_lock;
 	t_philo			*philos;
 }	t_data;
+
+size_t	get_current_time();
 
 #endif
