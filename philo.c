@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:37:34 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/07/31 14:22:56 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/07/31 19:14:43 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,12 @@ int	all_ate(t_philo *philo)
 		pthread_mutex_unlock(&philo->m_lock);
 	}
 	if (k == philo->data->philo_count)
+	{
+		pthread_mutex_lock(&philo->data->death_lock);
+		philo->data->simulation_end = 1;
+		pthread_mutex_unlock(&philo->data->death_lock);
 		return (1);
+	}
 	return (0);
 }
 
@@ -199,7 +204,6 @@ int	starved(t_philo *philo)
 		if (check_death(philo[i]))
 		{
 			write_message(&philo[i], "has died");
-			// exit(0);
 			pthread_mutex_lock(&philo->data->death_lock);
 			philo->data->simulation_end = 1;
 			pthread_mutex_unlock(&philo->data->death_lock);
@@ -229,7 +233,6 @@ void	eat(t_philo *philo)
 	write_message(philo, "Has taken a fork");
 	if (philo->data->philo_count == 1)
 	{
-		// usleep(philo->data->death_time * 1000);
 		ft_usleep(philo->data->death_time);
 		pthread_mutex_unlock(philo->rfork);
 		return ;
@@ -262,14 +265,12 @@ void	think(t_philo *philo)
 void	rest(t_philo *philo)
 {
 	write_message(philo, "is sleeping");
-	// usleep(philo->data->sleep_time * 1000);
 	ft_usleep(philo->data->sleep_time);
 }
 
 int	alive(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->data->death_lock);	
-	// printf("RUNNING This philo: %d\n", philo->id);
+	pthread_mutex_lock(&philo->data->death_lock);
 	if (philo->data->simulation_end)
 		return (pthread_mutex_unlock(&philo->data->death_lock), 0);
 	return (pthread_mutex_unlock(&philo->data->death_lock), 1);
@@ -329,17 +330,10 @@ void	start_simulation(t_data *data, pthread_mutex_t *forks, t_philo *philos)
 
 	i = 0;
 	if (pthread_create(&m_thread, NULL, &monitor, philos))
-	{
-		destroy_all("Error when creating threads", philos, forks);
 		return ;
-	}
 	while (i < data->philo_count)
 	{
-		if (pthread_create(&philos[i].thread, NULL, &routine, &philos[i]))
-		{
-			destroy_all("Error when creating threads", philos, forks);
-			break ;
-		}
+		pthread_create(&philos[i].thread, NULL, &routine, &philos[i]);
 		i++;
 	}
 	i = 0;
@@ -368,5 +362,6 @@ int	main(int ac, char **av)
 	if (!check_data(&data, philos))
 		return (1);
 	start_simulation(&data, forks, philos);
+	destroy_all(NULL, philos, forks);
 	return (0);
 }
