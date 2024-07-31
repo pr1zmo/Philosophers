@@ -1,5 +1,5 @@
 NAME	=	philo
-CFLAGS	=	-fsanitize=address # -Wall -Wextra -Werror
+CFLAGS	=	-fsanitize=thread # -Wall -Wextra -Werror
 FILES	=	philo.c \
 			# utils.c \
 			# threads.c \

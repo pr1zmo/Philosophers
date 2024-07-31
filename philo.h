@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 16:42:57 by prizmo            #+#    #+#             */
-/*   Updated: 2024/07/30 10:12:12 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/07/31 14:23:17 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,12 @@ typedef struct s_philo
 	int				nbr_of_meals;
 	pthread_mutex_t	*lfork;
 	pthread_mutex_t	*rfork;
+	pthread_mutex_t	m_lock;
 	t_data			*data;
 	size_t			last_meal_time;
 	size_t			last_action;
 }	t_philo;
 
-
+int	alive(t_philo *philo);
 
 #endif
