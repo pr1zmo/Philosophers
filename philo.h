@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 16:42:57 by prizmo            #+#    #+#             */
-/*   Updated: 2024/07/31 14:23:17 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/01 10:19:51 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct s_data
 	int				death_time;
 	int				must_eat_count;
 	pthread_mutex_t	print_lock;
-	pthread_mutex_t	meal_lock;
+	// pthread_mutex_t	meal_lock;
 	pthread_mutex_t	death_lock;
 	int				simulation_end;
 }	t_data;

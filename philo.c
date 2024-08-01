@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:37:34 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/08/01 10:14:45 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/01 10:22:32 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	init_data(char **av, int ac, t_data *data)
 		data->must_eat_count = -1;
 	data->simulation_end = 0;
 	pthread_mutex_init(&data->print_lock, NULL);
-	pthread_mutex_init(&data->meal_lock, NULL);
+	// pthread_mutex_init(&data->meal_lock, NULL);
 	pthread_mutex_init(&data->death_lock, NULL);
 }
 
@@ -180,14 +180,17 @@ int	all_ate(t_philo *philo)
 
 int	check_death(t_philo philo)
 {
-	pthread_mutex_lock(&philo.data->meal_lock);
+	// pthread_mutex_lock(&philo.data->meal_lock);
+	pthread_mutex_lock(&philo.m_lock);
 	if (get_time() - philo.last_meal_time >= philo.data->death_time
 		&& philo.eating == 0)
 	{
-		pthread_mutex_unlock(&philo.data->meal_lock);
+		// pthread_mutex_unlock(&philo.data->meal_lock);
+		pthread_mutex_unlock(&philo.m_lock);
 		return (1);
 	}
-	pthread_mutex_unlock(&philo.data->meal_lock);
+	// pthread_mutex_unlock(&philo.data->meal_lock);
+	pthread_mutex_unlock(&philo.m_lock);
 	return (0);
 }
 
@@ -252,19 +255,20 @@ void	eat(t_philo *philo)
 	write_message(philo, "has taken a fork");
 	write_message(philo, "is eating");
 
-	pthread_mutex_lock(&philo->data->meal_lock);
+	// pthread_mutex_lock(&philo->data->meal_lock);
 	pthread_mutex_lock(&philo->m_lock);
 	philo->eating = 1;
 	philo->nbr_of_meals += 1;
 	philo->last_meal_time = get_time();
 	pthread_mutex_unlock(&philo->m_lock);
-	pthread_mutex_unlock(&philo->data->meal_lock);
 
 	ft_usleep(philo->data->eat_time);
 
-	pthread_mutex_lock(&philo->data->meal_lock);
+	pthread_mutex_lock(&philo->m_lock);
+	// pthread_mutex_lock(&philo->data->meal_lock);
 	philo->eating = 0;
-	pthread_mutex_unlock(&philo->data->meal_lock);
+	pthread_mutex_unlock(&philo->m_lock);
+	// pthread_mutex_unlock(&philo->data->meal_lock);
 
 	pthread_mutex_unlock(philo->lfork);
 	pthread_mutex_unlock(philo->rfork);
@@ -327,11 +331,12 @@ void	destroy_all(char *str, t_philo *philo, pthread_mutex_t *forks)
 		write(2, "\n", 1);
 	}
 	pthread_mutex_destroy(&philo->data->print_lock);
-	pthread_mutex_destroy(&philo->data->meal_lock);
+	// pthread_mutex_destroy(&philo->data->meal_lock);
 	pthread_mutex_destroy(&philo->data->death_lock);
 	while (i < philo->data->philo_count)
 	{
 		pthread_mutex_destroy(&forks[i]);
+		pthread_mutex_destroy(&philo[i].m_lock);
 		i++;
 	}
 }
