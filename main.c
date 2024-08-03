@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:37:34 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/08/02 14:05:48 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/03 12:57:39 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ int	main(int ac, char **av)
 	init_data(av, ac, &data);
 	init_forks(forks, av);
 	init_philos(forks, &data, philos);
-	if (!check_data(&data, philos))
+	if (!check_data(&data))
 		return (1);
-	start_simulation(&data, forks, philos);
+	start_simulation(&data, philos);
 	destroy_all(NULL, philos, forks);
 	return (0);
 }

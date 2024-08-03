@@ -6,15 +6,14 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 12:31:14 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/03 09:49:14 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/03 10:45:16 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	check_data(t_data *data, t_philo *philo)
+int	check_data(t_data *data)
 {
-	(void)philo;
 	if (data->philo_count < 1 || data->philo_count > 200)
 	{
 		printf("%d\n", data->philo_count);
@@ -40,12 +39,18 @@ int	ft_usleep(size_t milliseconds)
 int	check_death(t_philo philo)
 {
 	pthread_mutex_lock(&philo.m_lock);
-	if (get_time() - philo.last_meal_time >= (long unsigned)philo.data->death_time
+	if (get_time() - philo.last_meal_time >= philo.data->death_time
 		&& philo.eating == 0)
-	{
-		pthread_mutex_unlock(&philo.m_lock);
-		return (1);
-	}
-	pthread_mutex_unlock(&philo.m_lock);
-	return (0);
+		return (pthread_mutex_unlock(&philo.m_lock), 1);
+	return (pthread_mutex_unlock(&philo.m_lock), 0);
+}
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	size_t	i;
+
+	i = 0;
+	while (s1[i] && s2[i] && s1[i] == s2[i])
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

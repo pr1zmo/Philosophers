@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 12:32:50 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/03 09:49:50 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/03 11:01:26 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,8 @@ void	*monitor(void *param)
 	philo = (t_philo *)param;
 	while (1)
 	{
-		if (starved(philo))
+		if (starved(philo) || all_ate(philo))
 			break ;
-		if (philo->data->must_eat_count > 0)
-			if (all_ate(philo))
-				break ;
 	}
 	return (param);
 }
@@ -44,15 +41,13 @@ void	*routine(void *data)
 	return (data);
 }
 
-void	start_simulation(t_data *data, pthread_mutex_t *forks, t_philo *philos)
+void	start_simulation(t_data *data, t_philo *philos)
 {
 	pthread_t	m_thread;
 	int			i;
-	(void)forks;
 
 	i = 0;
-	if (pthread_create(&m_thread, NULL, &monitor, philos))
-		return ;
+	pthread_create(&m_thread, NULL, &monitor, philos);
 	while (i < data->philo_count)
 	{
 		pthread_create(&philos[i].thread, NULL, &routine, &philos[i]);

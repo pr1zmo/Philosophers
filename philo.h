@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 16:42:57 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/02 14:24:27 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/03 13:05:56 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,18 @@
 # define UNDERLINE	"\033[4m"
 # define REVERSED	"\033[7m"
 
+# define FORK		"has taken a fork"
+# define EAT		"is eating"
+# define SLEEP		"is sleeping"
+# define THINK		"is thinking"
+# define DEAD		"has died"
+
 typedef struct s_data
 {
 	int				philo_count;
-	int				eat_time;
-	int				sleep_time;
-	int				death_time;
+	size_t			eat_time;
+	size_t			sleep_time;
+	size_t			death_time;
 	int				must_eat_count;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	death_lock;
@@ -66,16 +72,15 @@ typedef struct s_philo
 	pthread_mutex_t	m_lock;
 	t_data			*data;
 	size_t			last_meal_time;
-	size_t			last_action;
+	size_t			first_action;
 }	t_philo;
 
 int		check_params(char **av, int const ac);
 void	init_data(char **av, int ac, t_data *data);
 void	init_forks(pthread_mutex_t *forks, char **av);
 void	init_philos(pthread_mutex_t *fork, t_data *data, t_philo *philo);
-int		check_data(t_data *data, t_philo *philo);
-void	start_simulation(t_data *data, pthread_mutex_t *forks,
-		t_philo *philos);
+int		check_data(t_data *data);
+void	start_simulation(t_data *data, t_philo *philos);
 void	destroy_all(char *str, t_philo *philo, pthread_mutex_t *forks);
 int		all_ate(t_philo *philo);
 int		starved(t_philo *philo);
@@ -92,5 +97,6 @@ int		ft_atoi(const char *str);
 int		ft_usleep(size_t milliseconds);
 int		check_death(t_philo philo);
 size_t	get_time(void);
+int		ft_strcmp(const char *s1, const char *s2);
 
 #endif

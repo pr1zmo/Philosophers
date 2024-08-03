@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 12:26:27 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/02 12:30:45 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/03 13:05:48 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	init_philos(pthread_mutex_t *fork, t_data *data, t_philo *philo)
 		philo[i].data = data;
 		pthread_mutex_init(&philo[i].m_lock, NULL);
 		philo[i].last_meal_time = get_time();
-		philo[i].last_action = get_time();
+		philo[i].first_action = get_time();
 		i++;
 	}
 }
