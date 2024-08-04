@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 12:29:20 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/03 16:33:25 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/04 10:51:13 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ void	write_message(t_philo *philo, char *str)
 	size_t	timestamp;
 
 	timestamp = get_time() - philo->first_action;
-	pthread_mutex_lock(&philo->data->print_lock);
 	if (alive(philo))
 	{
 		if (ft_strcmp(str, EAT) == 0)

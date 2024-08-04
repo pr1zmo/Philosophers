@@ -6,23 +6,24 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 12:32:50 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/03 11:01:26 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/04 10:55:14 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*monitor(void *param)
+void *monitor(void *param)
 {
-	t_philo	*philo;
-
-	philo = (t_philo *)param;
-	while (1)
-	{
-		if (starved(philo) || all_ate(philo))
-			break ;
-	}
-	return (param);
+    t_philo *philos = (t_philo *)param;
+    while (alive(philos))
+    {
+        if (starved(philos))
+            break;
+        if (all_ate(philos))
+            break;
+        usleep(100);
+    }
+    return (NULL);
 }
 
 void	*routine(void *data)
@@ -51,6 +52,7 @@ void	start_simulation(t_data *data, t_philo *philos)
 	while (i < data->philo_count)
 	{
 		pthread_create(&philos[i].thread, NULL, &routine, &philos[i]);
+		usleep(50);
 		i++;
 	}
 	i = 0;

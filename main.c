@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:37:34 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/08/03 12:57:39 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/04 10:06:17 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	starved(t_philo *philo)
 		{
 			write_message(&philo[i], "has died");
 			pthread_mutex_lock(&philo->data->death_lock);
+			philo->is_dead = 1;
 			philo->data->simulation_end = 1;
 			pthread_mutex_unlock(&philo->data->death_lock);
 			return (1);
@@ -60,7 +61,7 @@ int	starved(t_philo *philo)
 int	alive(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->data->death_lock);
-	if (philo->data->simulation_end)
+	if (philo->is_dead || philo->data->simulation_end)
 		return (pthread_mutex_unlock(&philo->data->death_lock), 0);
 	return (pthread_mutex_unlock(&philo->data->death_lock), 1);
 }
