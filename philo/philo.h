@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 16:42:57 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/04 12:23:43 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/05 10:12:20 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void	init_forks(pthread_mutex_t *forks, char **av);
 void	init_philos(pthread_mutex_t *fork, t_data *data, t_philo *philo);
 int		check_data(t_data *data);
 void	start_simulation(t_data *data, t_philo *philos);
+void	join_philos(t_data *data, t_philo *philos);
 void	destroy_all(char *str, t_philo *philo, pthread_mutex_t *forks);
 int		all_ate(t_philo *philo);
 int		starved(t_philo *philo);
