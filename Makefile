@@ -1,6 +1,6 @@
 NAME	=	philo
 CFLAGS	=	#-fsanitize=thread -g3 -Wall -Wextra -Werror
-FILES	=	main.c utils.c utils2.c actions.c \
+FILES	=	main.c #utils.c utils2.c actions.c \
 			simulation.c init.c
 OBJ		=	$(FILES:.c=.o)
 

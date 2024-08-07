@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 16:42:57 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/05 10:12:20 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/07 12:18:45 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <sys/time.h>
+# include <sys/types.h>
 
 # define RESET		"\033[0m"
 # define BLACK		"\033[30m"
@@ -51,13 +52,13 @@
 typedef struct s_data
 {
 	int				philo_count;
-	size_t			eat_time;
-	size_t			sleep_time;
-	size_t			death_time;
-	int				must_eat_count;
+	u_int64_t		eat_time;
+	u_int64_t		sleep_time;
+	u_int64_t		death_time;
+	int				meal_count;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	death_lock;
-	int				simulation_end;
+	int				finish;
 }	t_data;
 
 typedef struct s_philo
@@ -71,33 +72,33 @@ typedef struct s_philo
 	pthread_mutex_t	*rfork;
 	pthread_mutex_t	m_lock;
 	t_data			*data;
-	size_t			last_meal_time;
-	size_t			first_action;
+	u_int64_t		last_meal_time;
+	// u_int64_t		first_action;
 }	t_philo;
 
-int		check_params(char **av, int const ac);
-void	init_data(char **av, int ac, t_data *data);
-void	init_forks(pthread_mutex_t *forks, char **av);
-void	init_philos(pthread_mutex_t *fork, t_data *data, t_philo *philo);
-int		check_data(t_data *data);
-void	start_simulation(t_data *data, t_philo *philos);
-void	join_philos(t_data *data, t_philo *philos);
-void	destroy_all(char *str, t_philo *philo, pthread_mutex_t *forks);
-int		all_ate(t_philo *philo);
-int		starved(t_philo *philo);
-int		alive(t_philo *philo);
-void	eat(t_philo *philo);
-void	think(t_philo *philo);
-void	rest(t_philo *philo);
-void	write_message(t_philo *philo, char *str);
-void	*monitor(void *param);
-void	*routine(void *data);
-int		ft_strlen(char *str);
-int		ft_isdigit(char	const *c);
-int		ft_atoi(const char *str);
-int		ft_usleep(size_t milliseconds);
-int		check_death(t_philo philo);
-size_t	get_time(void);
-int		ft_strcmp(const char *s1, const char *s2);
+// int		check_params(char **av, int const ac);
+// void	init_data(char **av, int ac, t_data *data);
+// void	init_forks(pthread_mutex_t *forks, char **av);
+// void	init_philos(pthread_mutex_t *fork, t_data *data, t_philo *philo);
+// int		check_data(t_data *data);
+// void	start_simulation(t_data *data, t_philo *philos);
+// void	join_philos(t_data *data, t_philo *philos);
+// void	destroy_all(char *str, t_philo *philo, pthread_mutex_t *forks);
+// int		all_ate(t_philo *philo);
+// int		starved(t_philo *philo);
+// int		alive(t_philo *philo);
+// void	eat(t_philo *philo);
+// void	think(t_philo *philo);
+// void	rest(t_philo *philo);
+// void	write_message(t_philo *philo, char *str);
+// void	*monitor(void *param);
+// void	*routine(void *data);
+// int		ft_strlen(char *str);
+// int		ft_isdigit(char	const *c);
+// int		ft_atoi(const char *str);
+// int		ft_usleep(size_t milliseconds);
+// int		check_death(t_philo philo);
+// size_t	get_time(void);
+// int		ft_strcmp(const char *s1, const char *s2);
 
 #endif
