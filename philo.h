@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 16:42:57 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/07 12:18:45 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/07 13:48:07 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,11 @@
 # define UNDERLINE	"\033[4m"
 # define REVERSED	"\033[7m"
 
-# define FORK		"has taken a fork"
-# define EAT		"is eating"
-# define SLEEP		"is sleeping"
-# define THINK		"is thinking"
-# define DEAD		"died"
+# define FORK		"has taken a fork🍴"
+# define EAT		"is eating🍝"
+# define SLEEP		"is sleeping😴"
+# define THINK		"is thinking🤔"
+# define DEAD		"died☠️"
 
 typedef struct s_data
 {
@@ -73,7 +73,7 @@ typedef struct s_philo
 	pthread_mutex_t	m_lock;
 	t_data			*data;
 	u_int64_t		last_meal_time;
-	// u_int64_t		first_action;
+	u_int64_t		last_action;
 }	t_philo;
 
 // int		check_params(char **av, int const ac);

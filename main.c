@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 17:01:02 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/07 12:38:39 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/07 14:25:09 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,7 @@ void	init_philos(t_philo *philo, pthread_mutex_t *forks, t_data *data)
 		philo[i].is_dead = 0;
 		philo[i].nbr_of_meals = 0;
 		philo[i].last_meal_time = get_time();
+		philo[i].last_action = get_time();
 		if (i % 2 != 0)
 		{
 			philo[i].rfork = &forks[i];
@@ -159,11 +160,136 @@ void	init_philos(t_philo *philo, pthread_mutex_t *forks, t_data *data)
 	}
 }
 
+int	all_ate(t_philo *philos)
+{
+	int	i;
+	int	k;
+
+	i = 0;
+	k = 0;
+	while (i < philos->data->philo_count)
+	{
+		pthread_mutex_lock(&philos[i].m_lock);
+		if (philos[i].nbr_of_meals >= philos->data->meal_count)
+			k++;
+		i++;
+		pthread_mutex_unlock(&philos[i].m_lock);
+	}
+	if (k == philos->data->philo_count)
+		return (1);
+	return (0);
+}
+
+int	starved(t_philo *philos)
+{
+	int	i;
+
+	i = 0;
+	while (i < philos->data->philo_count)
+	{
+		pthread_mutex_lock(&philos->data->death_lock);
+		if (get_time() - philos[i].last_meal_time > philos->data->death_time)
+			return (pthread_mutex_unlock(&philos->data->death_lock), 1);
+		i++;
+	}
+	return (0);
+}
+
+void	write_message(t_philo *philo, int id, char *str)
+{
+	u_int64_t curr_time;
+
+	curr_time = get_time() - philo->last_action;
+	pthread_mutex_lock(&philo->data->print_lock);
+	printf("Last action: %llu\n", philo->last_action);
+	printf("Current time: %llu\n", get_time());
+	philo->last_action = get_time();
+	printf("%llu %d %s\n", curr_time, id, str);
+	pthread_mutex_unlock(&philo->data->print_lock);
+}
+
 void	*monitor(void *data)
 {
 	t_philo	*philos;
 
 	philos = (t_philo *)data;
+	while (1)
+	{
+		if ((philos->data->meal_count != -1) && all_ate(philos))
+			break;
+		if (starved(philos))
+			break;
+		ft_usleep(50);
+	}
+	return (philos);
+}
+
+int	alive(t_philo *philo)
+{
+	if (philo->data->meal_count != -1 && philo->nbr_of_meals >= philo->data->meal_count)
+		return (0);
+	if (get_time() - philo->last_meal_time > philo->data->death_time)
+	{
+		pthread_mutex_lock(&philo->m_lock);
+		write_message(philo, philo->id, DEAD);
+		pthread_mutex_unlock(&philo->m_lock);
+		return (0);
+	}
+	return (1);
+}
+
+void	take_forks(pthread_mutex_t *fork_1, pthread_mutex_t *fork_2, t_philo *philo)
+{
+	pthread_mutex_lock(fork_1);
+	write_message(philo, philo->id, FORK);
+	pthread_mutex_lock(fork_2);
+	write_message(philo, philo->id, FORK);
+}
+
+void	eat(t_philo *philo)
+{
+	if (philo->data->philo_count == 1)
+	{
+		write_message(philo, philo->id, FORK);
+		ft_usleep(philo->data->death_time);
+		return ;
+	}
+	if (philo->id % 2 == 0)
+		take_forks(philo->rfork, philo->lfork, philo);
+	else
+		take_forks(philo->lfork, philo->rfork, philo);
+	// pthread_mutex_lock(philo->lfork);
+	// write_message(philo, philo->id, FORK);
+	// pthread_mutex_lock(philo->rfork);
+	// write_message(philo, philo->id, FORK);
+	pthread_mutex_lock(&philo->m_lock);
+	write_message(philo, philo->id, EAT);
+	philo->nbr_of_meals++;
+	philo->eating = 1;
+	philo->last_meal_time = get_time();
+	pthread_mutex_unlock(&philo->m_lock);
+	ft_usleep(philo->data->eat_time);
+	pthread_mutex_unlock(philo->lfork);
+	pthread_mutex_unlock(philo->rfork);
+	pthread_mutex_lock(&philo->m_lock);
+	philo->eating = 0;
+	pthread_mutex_unlock(&philo->m_lock);
+}
+
+void	*routine(void *data)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)data;
+	while (alive(philo))
+	{
+		eat(philo);
+		write_message(philo, philo->id, SLEEP);
+		ft_usleep(philo->data->sleep_time);
+		write_message(philo, philo->id, THINK);
+		ft_usleep(50);
+	}
+	return (philo);
 }
 
 void	start_simulation(t_philo *philos)
@@ -172,7 +298,20 @@ void	start_simulation(t_philo *philos)
 	int			i;
 
 	i = 0;
-	pthread_create(monitor_t, NULL, monitor, philos);
+	if (pthread_create(&monitor_t, NULL, monitor, philos))
+		return ;
+	while (i < philos->data->philo_count)
+	{
+		pthread_create(&philos[i].thread, NULL, routine, &philos[i]);
+		i++;
+	}
+	pthread_join(monitor_t, NULL);
+	i = 0;
+	while (i < philos->data->philo_count)
+	{
+		pthread_join(philos[i].thread, NULL);
+		i++;
+	}
 }
 
 int	main(int ac, char **av)
