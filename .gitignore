@@ -1,6 +1,4 @@
 *.o
 .idea
 .vscode
-philo
-/!philo
 /philo_1
