@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 16:42:57 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/07 13:48:07 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/08 09:59:20 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ typedef struct s_philo
 	pthread_mutex_t	m_lock;
 	t_data			*data;
 	u_int64_t		last_meal_time;
-	u_int64_t		last_action;
+	u_int64_t		first_action;
 }	t_philo;
 
 // int		check_params(char **av, int const ac);
@@ -90,7 +90,7 @@ typedef struct s_philo
 // void	eat(t_philo *philo);
 // void	think(t_philo *philo);
 // void	rest(t_philo *philo);
-// void	write_message(t_philo *philo, char *str);
+void	write_message(t_philo *philo, int id, char *str);
 // void	*monitor(void *param);
 // void	*routine(void *data);
 // int		ft_strlen(char *str);
