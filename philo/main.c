@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 17:01:02 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/11 21:07:37 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/12 11:40:20 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,20 @@ int	all_ate(t_philo *philos)
 	return (0);
 }
 
+int	check_death(t_philo philo)
+{
+	pthread_mutex_lock(&philo.m_lock);
+	if (get_time() - philo.last_meal_time >= philo.data->death_time
+		&& philo.eating == 0)
+	{
+		philo.is_dead = 1;
+		pthread_mutex_unlock(&philo.m_lock);
+		return (1);
+	}
+	pthread_mutex_unlock(&philo.m_lock);
+	return (0);
+}
+
 int	starved(t_philo *philos)
 {
 	int	i;
@@ -193,11 +207,12 @@ int	starved(t_philo *philos)
 	while (i < philos->data->philo_count)
 	{
 		pthread_mutex_lock(&philos->data->death_lock);
-		if (get_time() - philos[i].last_meal_time > philos->data->death_time)
+		if (check_death(philos[i]))
 		{
 			philos->data->finish = 1;
 			return (pthread_mutex_unlock(&philos->data->death_lock), 1);
 		}
+		pthread_mutex_unlock(&philos->data->death_lock);
 		i++;
 	}
 	return (0);
@@ -225,6 +240,8 @@ void	write_message(t_philo *philo, int id, char *str)
 	pthread_mutex_lock(&philo->data->print_lock);
 	if (alive(philo))
 		printf("%lu %d %s\n", curr_time, id, str);
+	else
+		printf("DEAD\n");
 	pthread_mutex_unlock(&philo->data->print_lock);
 }
 
@@ -233,39 +250,34 @@ void	*monitor(void *data)
 	t_philo	*philos;
 
 	philos = (t_philo *)data;
-	while (1)
+	while (alive(philos))
 	{
-		if ((philos->data->meal_count != -1) && all_ate(philos))
-			break;
 		if (starved(philos))
 			break;
-		ft_usleep(50);
+		if (philos->data->meal_count != -1)
+		{
+			if (all_ate(philos))
+				break;
+		}
+		usleep(50);
 	}
 	return (philos);
 }
 
-void	take_forks(pthread_mutex_t *fork_1, pthread_mutex_t *fork_2, t_philo *philo)
-{
-	pthread_mutex_lock(fork_1);
-	write_message(philo, philo->id, FORK);
-	pthread_mutex_lock(fork_2);
-	write_message(philo, philo->id, FORK);
-}
-
 void	eat(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->m_lock);
-	write_message(philo, philo->id, FORK);
+	pthread_mutex_lock(philo->lfork);
 	if (philo->data->philo_count == 1)
 	{
+		write_message(philo, philo->id, FORK);
 		ft_usleep(philo->data->death_time);
-		write_message(philo, philo->id, DEAD);
 		return ;
 	}
-	pthread_mutex_lock(philo->lfork);
 	write_message(philo, philo->id, FORK);
-	pthread_mutex_lock(&philo->m_lock);
+	pthread_mutex_lock(philo->rfork);
+	write_message(philo, philo->id, FORK);
 	write_message(philo, philo->id, EAT);
+	pthread_mutex_lock(&philo->m_lock);
 	philo->nbr_of_meals++;
 	philo->eating = 1;
 	philo->last_meal_time = get_time();
@@ -274,8 +286,8 @@ void	eat(t_philo *philo)
 	pthread_mutex_lock(&philo->m_lock);
 	philo->eating = 0;
 	pthread_mutex_unlock(&philo->m_lock);
-	pthread_mutex_unlock(philo->lfork);
 	pthread_mutex_unlock(philo->rfork);
+	pthread_mutex_unlock(philo->lfork);
 }
 
 void	*routine(void *data)
@@ -283,6 +295,8 @@ void	*routine(void *data)
 	t_philo	*philo;
 
 	philo = (t_philo *)data;
+	if (philo->id % 2 == 0)
+		usleep(50);
 	while (alive(philo))
 	{
 		eat(philo);
@@ -291,7 +305,7 @@ void	*routine(void *data)
 		write_message(philo, philo->id, THINK);
 		ft_usleep(50);
 	}
-	return (philo);
+	return (data);
 }
 
 void	start_simulation(t_philo *philos)
@@ -308,12 +322,6 @@ void	start_simulation(t_philo *philos)
 		i++;
 	}
 	pthread_join(monitor_t, NULL);
-	i = 0;
-	while (i < philos->data->philo_count)
-	{
-		pthread_join(philos[i].thread, NULL);
-		i++;
-	}
 }
 
 void	destroy_all(t_philo *philo, pthread_mutex_t *forks)
@@ -329,6 +337,18 @@ void	destroy_all(t_philo *philo, pthread_mutex_t *forks)
 	}
 	pthread_mutex_destroy(&philo->data->death_lock);
 	pthread_mutex_destroy(&philo->data->print_lock);
+}
+
+void	join_philos(t_data *data, t_philo *philos)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->philo_count)
+	{
+		pthread_join(philos[i].thread, NULL);
+		i++;
+	}
 }
 
 int	main(int ac, char **av)
@@ -347,5 +367,6 @@ int	main(int ac, char **av)
 	init_philos(philos, forks, &data);
 	start_simulation(philos);
 	destroy_all(philos, forks);
+	join_philos(&data, philos);
 	return (0);
 }
