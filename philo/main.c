@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:37:34 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/08/05 10:12:00 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/17 16:23:54 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	starved(t_philo *philo)
 		{
 			write_message(&philo[i], DEAD);
 			pthread_mutex_lock(&philo->data->death_lock);
-			philo->is_dead = 1;
+			philo->is_dead = 1;	
 			philo->data->simulation_end = 1;
 			pthread_mutex_unlock(&philo->data->death_lock);
 			return (1);
