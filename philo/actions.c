@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 12:29:20 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/04 12:40:27 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/17 20:34:41 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,21 +33,10 @@ void	eat(t_philo *philo)
 	ft_usleep(philo->data->eat_time);
 	pthread_mutex_lock(&philo->m_lock);
 	philo->eating = 0;
+	philo->hunger_level = get_time() - philo->last_meal_time;
 	pthread_mutex_unlock(&philo->m_lock);
 	pthread_mutex_unlock(philo->lfork);
 	pthread_mutex_unlock(philo->rfork);
-}
-
-void	think(t_philo *philo)
-{
-	write_message(philo, THINK);
-	ft_usleep(50);
-}
-
-void	rest(t_philo *philo)
-{
-	write_message(philo, SLEEP);
-	ft_usleep(philo->data->sleep_time);
 }
 
 void	destroy_all(char *str, t_philo *philo, pthread_mutex_t *forks)
@@ -77,17 +66,7 @@ void	write_message(t_philo *philo, char *str)
 	timestamp = get_time() - philo->first_action;
 	pthread_mutex_lock(&philo->data->print_lock);
 	if (alive(philo))
-	{
-		if (ft_strcmp(str, EAT) == 0)
-			printf("%s%ld %s%d %s%s🍝\n", RED BOLD, timestamp, GREEN BOLD, philo->id, WHITE, str);
-		else if (ft_strcmp(str, SLEEP) == 0)
-			printf("%s%ld %s%d %s%s💤\n", RED BOLD, timestamp, GREEN BOLD, philo->id, WHITE, str);
-		else if (ft_strcmp(str, THINK) == 0)
-			printf("%s%ld %s%d %s%s🤔\n", RED BOLD, timestamp, GREEN BOLD, philo->id, WHITE, str);
-		else if (ft_strcmp(str, FORK) == 0)
-			printf("%s%ld %s%d %s%s🍴\n", RED BOLD, timestamp, GREEN BOLD, philo->id, WHITE, str);
-		else
-			printf("%s%ld %s%d %s%s💀\n", RED BOLD, timestamp, GREEN BOLD, philo->id, WHITE, str);
-	}
+		// printf("%s%ld %s%d %s%s\n", RED BOLD, timestamp, GREEN BOLD, philo->id, WHITE, str);
+		printf("%ld %d %s\n", timestamp, philo->id, str);
 	pthread_mutex_unlock(&philo->data->print_lock);
 }

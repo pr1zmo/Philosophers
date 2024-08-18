@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 12:26:27 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/04 12:31:56 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/17 20:23:21 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,20 @@ void	init_forks(pthread_mutex_t *forks, char **av)
 	}
 }
 
+// void	set_forks(t_philo *philo, pthread_mutex_t *fork, int i)
+// {
+// 	if (philo->id % 2 == 0)
+// 	{
+// 		philo->rfork = &fork[i];
+// 		philo->lfork = &fork[(i + 1) % philo->data->philo_count];
+// 	}
+// 	else
+// 	{
+// 		philo->lfork = &fork[i];
+// 		philo->rfork = &fork[(i + 1) % philo->data->philo_count];
+// 	}
+// }
+
 void	init_philos(pthread_mutex_t *fork, t_data *data, t_philo *philo)
 {
 	int	i;
@@ -50,6 +64,7 @@ void	init_philos(pthread_mutex_t *fork, t_data *data, t_philo *philo)
 		philo[i].eating = 0;
 		philo[i].is_dead = 0;
 		philo[i].nbr_of_meals = 0;
+		// set_forks(&philo[i], fork, i);
 		if (philo[i].id % 2 == 0)
 		{
 			philo[i].rfork = &fork[i];
@@ -62,6 +77,7 @@ void	init_philos(pthread_mutex_t *fork, t_data *data, t_philo *philo)
 		}
 		philo[i].data = data;
 		pthread_mutex_init(&philo[i].m_lock, NULL);
+		philo[i].hunger_level = get_time();
 		philo[i].last_meal_time = get_time();
 		philo[i].first_action = get_time();
 		i++;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 16:42:57 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/05 10:12:20 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/17 20:12:00 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,12 @@
 # define UNDERLINE	"\033[4m"
 # define REVERSED	"\033[7m"
 
+// # define FORK		"has taken a fork🍴"
+// # define EAT		"is eating🍝"
+// # define SLEEP		"is sleeping💤"
+// # define THINK		"is thinking🤔"
+// # define DEAD		"died💀"
+
 # define FORK		"has taken a fork"
 # define EAT		"is eating"
 # define SLEEP		"is sleeping"
@@ -73,6 +79,7 @@ typedef struct s_philo
 	t_data			*data;
 	size_t			last_meal_time;
 	size_t			first_action;
+	size_t			hunger_level;
 }	t_philo;
 
 int		check_params(char **av, int const ac);
