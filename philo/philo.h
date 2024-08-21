@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 16:42:57 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/05 10:12:20 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/21 12:10:48 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@
 # define UNDERLINE	"\033[4m"
 # define REVERSED	"\033[7m"
 
-# define FORK		"has taken a fork"
-# define EAT		"is eating"
-# define SLEEP		"is sleeping"
-# define THINK		"is thinking"
-# define DEAD		"died"
+# define FORK		"has taken a fork🍴"
+# define EAT		"is eating🍝"
+# define SLEEP		"is sleeping💤"
+# define THINK		"is thinking🤔"
+# define DEAD		"died💀"
 
 typedef struct s_data
 {
@@ -82,13 +82,11 @@ void	init_philos(pthread_mutex_t *fork, t_data *data, t_philo *philo);
 int		check_data(t_data *data);
 void	start_simulation(t_data *data, t_philo *philos);
 void	join_philos(t_data *data, t_philo *philos);
-void	destroy_all(char *str, t_philo *philo, pthread_mutex_t *forks);
+void	destroy_all(t_philo *philo, pthread_mutex_t *forks);
 int		all_ate(t_philo *philo);
 int		starved(t_philo *philo);
 int		alive(t_philo *philo);
 void	eat(t_philo *philo);
-void	think(t_philo *philo);
-void	rest(t_philo *philo);
 void	write_message(t_philo *philo, char *str);
 void	*monitor(void *param);
 void	*routine(void *data);

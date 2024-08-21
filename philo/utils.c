@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 12:28:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/02 14:04:48 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/17 16:24:41 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	ft_strlen(char *str)
 {
 	int	i;
 
+	i = 0;
 	if (!str)
 		return (0);
 	while (str[i])

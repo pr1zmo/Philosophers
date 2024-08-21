@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:37:34 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/08/05 10:12:00 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/21 12:11:09 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,12 +77,12 @@ int	main(int ac, char **av)
 	if (!check_params(av, ac))
 		return (printf("Invalid input values\n"), 1);
 	init_data(av, ac, &data);
-	init_forks(forks, av);
-	init_philos(forks, &data, philos);
 	if (!check_data(&data))
 		return (1);
+	init_forks(forks, av);
+	init_philos(forks, &data, philos);
 	start_simulation(&data, philos);
 	join_philos(&data, philos);
-	destroy_all(NULL, philos, forks);
+	destroy_all(philos, forks);
 	return (0);
 }

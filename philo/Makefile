@@ -1,5 +1,5 @@
 NAME	=	philo
-CFLAGS	=	#-fsanitize=thread -g3 -Wall -Wextra -Werror
+CFLAGS	=	-fsanitize=thread -g3 -Wall -Wextra -Werror
 FILES	=	main.c utils.c utils2.c actions.c \
 			simulation.c init.c
 OBJ		=	$(FILES:.c=.o)
@@ -7,10 +7,10 @@ OBJ		=	$(FILES:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	gcc $(CFLAGS) -o $(NAME) $(OBJ) -lpthread
+	cc $(CFLAGS) -o $(NAME) $(OBJ) -lpthread
 
 %.o: %.c
-	gcc $(CFLAGS) -c $< -o $@
+	cc $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -f $(OBJ)

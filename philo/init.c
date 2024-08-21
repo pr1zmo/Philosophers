@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 12:26:27 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/04 12:31:56 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/21 11:56:01 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,8 @@ void	init_philos(pthread_mutex_t *fork, t_data *data, t_philo *philo)
 		philo[i].eating = 0;
 		philo[i].is_dead = 0;
 		philo[i].nbr_of_meals = 0;
-		if (philo[i].id % 2 == 0)
-		{
-			philo[i].rfork = &fork[i];
-			philo[i].lfork = &fork[(i + 1) % data->philo_count];
-		}
-		else
-		{
-			philo[i].lfork = &fork[i];
-			philo[i].rfork = &fork[(i + 1) % data->philo_count];
-		}
+		philo[i].rfork = &fork[i];
+		philo[i].lfork = &fork[(i + 1) % data->philo_count];
 		philo[i].data = data;
 		pthread_mutex_init(&philo[i].m_lock, NULL);
 		philo[i].last_meal_time = get_time();
