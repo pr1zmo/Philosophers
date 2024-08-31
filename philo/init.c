@@ -50,8 +50,16 @@ void	init_philos(pthread_mutex_t *fork, t_data *data, t_philo *philo)
 		philo[i].eating = 0;
 		philo[i].is_dead = 0;
 		philo[i].nbr_of_meals = 0;
-		philo[i].rfork = &fork[i];
-		philo[i].lfork = &fork[(i + 1) % data->philo_count];
+		if (i % 2 == 0)
+		{
+			philo[i].rfork = &fork[i];
+			philo[i].lfork = &fork[(i + 1) % data->philo_count];
+		}
+		else
+		{
+			philo[i].lfork = &fork[i];
+			philo[i].rfork = &fork[(i + 1) % data->philo_count];
+		}
 		philo[i].data = data;
 		pthread_mutex_init(&philo[i].m_lock, NULL);
 		philo[i].last_meal_time = get_time();

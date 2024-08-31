@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:37:34 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/08/21 12:11:09 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/08/22 21:50:12 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	all_ate(t_philo *philo)
 	while (i < philo->data->philo_count)
 	{
 		pthread_mutex_lock(&philo[i].m_lock);
-		if (philo->data->must_eat_count == philo[i].nbr_of_meals)
+		if (philo[i].nbr_of_meals >= philo->data->must_eat_count)
 			k++;
 		pthread_mutex_unlock(&philo[i].m_lock);
 		i++;
@@ -50,8 +50,7 @@ int	starved(t_philo *philo)
 			pthread_mutex_lock(&philo->data->death_lock);
 			philo->is_dead = 1;
 			philo->data->simulation_end = 1;
-			pthread_mutex_unlock(&philo->data->death_lock);
-			return (1);
+			return (pthread_mutex_unlock(&philo->data->death_lock), 1);
 		}
 		i++;
 	}

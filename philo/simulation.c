@@ -6,17 +6,17 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 12:32:50 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/21 12:11:41 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/08/30 21:55:48 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*monitor(void *param)
+void	*monitor(void *data)
 {
 	t_philo	*philos;
 
-	philos = (t_philo *)param;
+	philos = (t_philo *)data;
 	while (1)
 	{
 		if (starved(philos))
@@ -28,12 +28,10 @@ void	*monitor(void *param)
 	return (NULL);
 }
 
-void	*routine(void *data)
+size_t	set_think_time(t_philo *philo)
 {
 	size_t	think_time;
-	t_philo	*philo;
 
-	philo = (t_philo *)data;
 	if (philo->data->death_time < philo->data->sleep_time
 		+ philo->data->eat_time)
 		think_time = 50;
@@ -41,7 +39,17 @@ void	*routine(void *data)
 		- (philo->data->eat_time + philo->data->sleep_time) > 50)
 		think_time = ((philo->data->death_time - philo->data->eat_time) / 2);
 	else
-		think_time = 10;
+		think_time = 0;
+	return (think_time);
+}
+
+void	*routine(void *data)
+{
+	size_t	think_time;
+	t_philo	*philo;
+
+	philo = (t_philo *)data;
+	think_time = set_think_time(philo);
 	if (philo->id % 2 == 0)
 		ft_usleep(think_time);
 	while (alive(philo))
@@ -51,8 +59,12 @@ void	*routine(void *data)
 		ft_usleep(philo->data->sleep_time);
 		write_message(philo, THINK);
 		ft_usleep(think_time);
+		if (get_time() - philo->last_meal_time
+			>= philo->data->death_time
+			|| (philo->data->must_eat_count > 0 && all_ate(philo)))
+			break ;
 	}
-	return (NULL);
+	return (data);
 }
 
 void	start_simulation(t_data *data, t_philo *philos)
@@ -61,10 +73,12 @@ void	start_simulation(t_data *data, t_philo *philos)
 	int			i;
 
 	i = 0;
-	pthread_create(&m_thread, NULL, &monitor, philos);
+	if (pthread_create(&m_thread, NULL, &monitor, philos) != 0)
+		return ;
 	while (i < data->philo_count)
 	{
-		pthread_create(&philos[i].thread, NULL, &routine, &philos[i]);
+		if (pthread_create(&philos[i].thread, NULL, &routine, &philos[i]) != 0)
+			break ;
 		i++;
 	}
 	pthread_join(m_thread, NULL);
