@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:37:34 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/08/22 21:50:12 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/12/07 09:45:48 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,12 @@ int	all_ate(t_philo *philo)
 		pthread_mutex_unlock(&philo[i].m_lock);
 		i++;
 	}
-	if (k == philo->data->philo_count)
+	if (k >= philo->data->philo_count)
 	{
 		pthread_mutex_lock(&philo->data->death_lock);
 		philo->data->simulation_end = 1;
 		pthread_mutex_unlock(&philo->data->death_lock);
+		exit(1);
 		return (1);
 	}
 	return (0);

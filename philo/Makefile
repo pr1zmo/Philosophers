@@ -2,7 +2,11 @@ NAME	=	philo
 CFLAGS	=	-fsanitize=thread -g3 -Wall -Wextra -Werror
 FILES	=	main.c utils.c utils2.c actions.c \
 			simulation.c init.c
-OBJ		=	$(FILES:.c=.o)
+OBJ_DIR	=	objects
+OBJ		=	$(addprefix $(OBJ_DIR)/, $(FILES:.c=.o))
+
+$(OBJ_DIR)/%.o: %.c
+	cc $(CFLAGS) -c $< -o $@
 
 all: $(NAME)
 

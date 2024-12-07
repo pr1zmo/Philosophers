@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 16:42:57 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/22 21:54:06 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/12/07 09:58:29 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct s_philo
 	int				eating;
 	int				is_dead;
 	int				nbr_of_meals;
+	int				free_forks;
 	pthread_mutex_t	*lfork;
 	pthread_mutex_t	*rfork;
 	pthread_mutex_t	m_lock;

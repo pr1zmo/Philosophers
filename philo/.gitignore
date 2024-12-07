@@ -5,3 +5,5 @@ LazyPhilosophersTester
 /.vscode
 .DS_Store
 .nfs*
+results
+*.html

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 12:32:50 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/30 21:55:48 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/12/07 10:02:59 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,16 @@ void	*routine(void *data)
 		ft_usleep(think_time);
 	while (alive(philo))
 	{
+		// if (get_time() - philo->last_meal_time > philo->data->death_time / 2)
+		// 	ft_usleep(10);
+			// pthread_mutex_lock(philo->lfork);
 		eat(philo);
 		write_message(philo, SLEEP);
 		ft_usleep(philo->data->sleep_time);
 		write_message(philo, THINK);
+		think_time = set_think_time(philo);
+		// printf("Philo %d will think for %zu ms\n", philo->id, think_time);
+		// printf("Free forks: %d\n", philo->free_forks);
 		ft_usleep(think_time);
 		if (get_time() - philo->last_meal_time
 			>= philo->data->death_time
