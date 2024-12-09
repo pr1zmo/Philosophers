@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 12:32:50 by prizmo            #+#    #+#             */
-/*   Updated: 2024/12/09 04:17:36 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/12/09 04:24:56 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,13 @@ void	*routine(void *data)
 		ft_usleep(think_time);
 	while (alive(philo))
 	{
+		if (philo->id % 2 == 0)
+			ft_usleep(10);
 		eat(philo);
 		write_message(philo, SLEEP);
 		ft_usleep(philo->data->sleep_time);
 		write_message(philo, THINK);
-		// think_time = set_think_time(philo);
-		if (philo->id == 2)
-			ft_usleep(10);
+		think_time = set_think_time(philo);
 		// ft_usleep(think_time);
 		// if (get_time() - philo->last_meal_time
 		// 	>= philo->data->death_time
