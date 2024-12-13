@@ -1,5 +1,5 @@
 NAME	=	philo
-CFLAGS	=	#-fsanitize=thread -g3 -Wall -Wextra -Werror
+CFLAGS	=	-g3 -Wall -Wextra -Werror #-fsanitize=thread
 FILES	=	main.c utils.c utils2.c actions.c \
 			simulation.c init.c
 OBJ_DIR	=	objects

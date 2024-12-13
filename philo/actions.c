@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 12:29:20 by prizmo            #+#    #+#             */
-/*   Updated: 2024/12/07 09:59:53 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:15:10 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	eat(t_philo *philo)
 {
 	pthread_mutex_lock(philo->rfork);
-	philo->free_forks -= 1;
 	write_message(philo, FORK);
 	if (philo->data->philo_count == 1)
 	{
@@ -24,7 +23,6 @@ void	eat(t_philo *philo)
 		return ;
 	}
 	pthread_mutex_lock(philo->lfork);
-	philo->free_forks -= 1;
 	write_message(philo, FORK);
 	write_message(philo, EAT);
 	pthread_mutex_lock(&philo->m_lock);
@@ -37,9 +35,7 @@ void	eat(t_philo *philo)
 	philo->eating = 0;
 	pthread_mutex_unlock(&philo->m_lock);
 	pthread_mutex_unlock(philo->lfork);
-	philo->free_forks += 1;
 	pthread_mutex_unlock(philo->rfork);
-	philo->free_forks += 1;
 }
 
 void	destroy_all(t_philo *philo, pthread_mutex_t *forks)

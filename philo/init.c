@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 12:26:27 by prizmo            #+#    #+#             */
-/*   Updated: 2024/12/07 09:58:50 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:15:13 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ void	init_philos(pthread_mutex_t *fork, t_data *data, t_philo *philo)
 		pthread_mutex_init(&philo[i].m_lock, NULL);
 		philo[i].last_meal_time = get_time();
 		philo[i].first_action = get_time();
-		philo[i].free_forks = data->philo_count;
 		i++;
 	}
 }

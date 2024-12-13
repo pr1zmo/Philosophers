@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:37:34 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/12/07 09:45:48 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:17:38 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ int	main(int ac, char **av)
 	init_forks(forks, av);
 	init_philos(forks, &data, philos);
 	start_simulation(&data, philos);
-	join_philos(&data, philos);
 	destroy_all(philos, forks);
 	return (0);
 }

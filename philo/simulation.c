@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 12:32:50 by prizmo            #+#    #+#             */
-/*   Updated: 2024/12/09 04:24:56 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:17:45 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,6 @@ void	*routine(void *data)
 		ft_usleep(philo->data->sleep_time);
 		write_message(philo, THINK);
 		think_time = set_think_time(philo);
-		// ft_usleep(think_time);
-		// if (get_time() - philo->last_meal_time
-		// 	>= philo->data->death_time
-		// 	|| (philo->data->must_eat_count > 0 && all_ate(philo)))
-		// 	break ;
 	}
 	return (data);
 }
@@ -85,6 +80,7 @@ void	start_simulation(t_data *data, t_philo *philos)
 		i++;
 	}
 	pthread_join(m_thread, NULL);
+	join_philos(data, philos);
 	return ;
 }
 
