@@ -7,4 +7,5 @@ LazyPhilosophersTester
 .nfs*
 results
 *.html
+objects
 philo
